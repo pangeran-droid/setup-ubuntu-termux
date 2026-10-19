@@ -1,6 +1,7 @@
 <div align="center">
 
 <img src="https://icon.icepanel.io/Technology/svg/Ubuntu.svg" width="100" alt="Ubuntu logo" />
+<img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Termux.svg" width="100" alt="Termux logo" />
 
 # Ubuntu 22.04 & PHP 8.5 on Termux
 
