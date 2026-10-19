@@ -11,6 +11,8 @@
 [![PHP](https://img.shields.io/badge/PHP-8.5-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://www.php.net/)
 [![proot-distro](https://img.shields.io/badge/proot--distro-Container-blue?style=for-the-badge)](https://github.com/termux/proot-distro)
 [![SSH](https://img.shields.io/badge/SSH-Enabled-black?style=for-the-badge&logo=openssh&logoColor=white)](https://www.openssh.com/)
+[![Apache](https://img.shields.io/badge/Apache-2.4-D22128?style=for-the-badge&logo=apache&logoColor=white)](https://httpd.apache.org/)
+[![MariaDB](https://img.shields.io/badge/MariaDB-Database-003545?style=for-the-badge&logo=mariadb&logoColor=white)](https://mariadb.org/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](http://makeapullrequest.com)
 
@@ -25,7 +27,8 @@
 3. [Accessing & Logging into Ubuntu](#3-accessing--logging-into-ubuntu)
 4. [Installing PHP 8.5](#4-installing-php-85)
 5. [Installing & Configuring SSH Server](#5-installing--configuring-ssh-server)
-6. [Useful Shortcut Commands](#6-useful-shortcut-commands)
+6. [Installing Apache, MySQL/MariaDB & Other Tools](#6-installing-apache-mysqlmariadb--other-tools)
+7. [Useful Shortcut Commands](#7-useful-shortcut-commands)
 
 ---
 
@@ -157,7 +160,89 @@ Enter the password you created in step [5.3](#53-set-a-password-for-the-user-roo
 > ssh root@192.168.x.x -p 2222
 > ```
 
-## 6. Useful Shortcut Commands
+## 6. Installing Apache, MySQL/MariaDB & Other Tools
+
+Run the following commands **inside** the Ubuntu terminal to build out a full local development stack (Apache + MySQL/MariaDB + phpMyAdmin + Composer).
+
+### 6.1 Install Apache Web Server
+
+```bash
+apt update
+apt install apache2 -y
+```
+
+Connect PHP to Apache:
+
+```bash
+apt install libapache2-mod-php8.5 -y
+service apache2 restart
+```
+
+Start Apache manually (background services don't auto-start in Termux):
+
+```bash
+service apache2 start
+```
+
+By default, Apache serves files from `/var/www/html`. Open `http://127.0.0.1` in a browser on the same device to verify it's running, or from another device on the same network using Termux's IP address (see the [SSH remote tip](#55-connecting-via-ssh) above).
+
+### 6.2 Install MySQL/MariaDB
+
+Ubuntu 22.04's default repo ships **MariaDB** (a drop-in MySQL replacement), which installs cleanly inside proot-distro — the official `mysql-server` package can fail there due to missing systemd:
+
+```bash
+apt install mariadb-server mariadb-client -y
+```
+
+Start the database service:
+
+```bash
+service mariadb start
+```
+
+Secure the installation (set root password, remove anonymous users, etc.):
+
+```bash
+mysql_secure_installation
+```
+
+Log into the MySQL/MariaDB shell:
+
+```bash
+mysql -u root -p
+```
+
+### 6.3 (Optional) Install phpMyAdmin
+
+A web UI for managing your databases:
+
+```bash
+apt install phpmyadmin -y
+```
+
+During setup, select **apache2** when prompted for the web server, and choose **yes** to configure the database with `dbconfig-common`. Once installed, access it at `http://127.0.0.1/phpmyadmin`.
+
+### 6.4 (Optional) Install Composer
+
+PHP's standard dependency manager, needed for most modern PHP frameworks (Laravel, Symfony, etc.):
+
+```bash
+curl -sS https://getcomposer.org/installer | php
+mv composer.phar /usr/local/bin/composer
+composer --version
+```
+
+### 6.5 Starting Everything Together
+
+Since Termux doesn't keep services running in the background automatically, start them each time after logging in:
+
+```bash
+service mariadb start
+service apache2 start
+service ssh start
+```
+
+## 7. Useful Shortcut Commands
 
 | Command | Description |
 |---|---|
