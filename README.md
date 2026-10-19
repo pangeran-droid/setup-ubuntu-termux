@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://img.icons8.com/fluency/96/ubuntu.png" width="90" alt="Ubuntu logo" />
+<img src="https://icon.icepanel.io/Technology/svg/Ubuntu.svg" width="100" alt="Ubuntu logo" />
 
 # Ubuntu 22.04 & PHP 8.5 on Termux
 
